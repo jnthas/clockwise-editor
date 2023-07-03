@@ -1,0 +1,38 @@
+
+html, body{
+    height: 100%;
+}
+
+body {
+    background-image: linear-gradient(120deg, #155799, #159957);
+}
+
+.btn,
+input {
+    height: 35px;
+    padding: 0 1em;
+}
+
+.color {
+    padding: 0 .25em;
+    width: 100px;
+    margin: 0 1em;
+}
+
+.led-matrix {
+    --size: 4;
+    background-color: rgb(28, 28, 29);
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: repeat(var(--size), 1fr);
+    grid-template-rows: repeat(var(--size), 1fr);
+    gap: 1px;
+    padding: 1px;    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pixel {
+    background-color: rgb(61, 61, 61);
+}
