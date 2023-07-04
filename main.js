@@ -1,10 +1,14 @@
 
 
+const size = 64
 const container = document.querySelector('.led-matrix')
-//const sizeEl = document.querySelector('.size')
-let size = 64
 const color = document.querySelector('.color')
 const buttons = document.getElementsByClassName('btn')
+
+const FONTS = {
+    "square": [5,7,2],
+    "picopixel": [3,4,1]
+}
 
 //let draw = false
 
@@ -124,6 +128,44 @@ function drawImage(x, y, image) {
                 }
             }
         });
+}
+
+
+
+function rgb565To888(color565) {
+
+    const redMask   = 0b1111100000000000;
+    const greenMask = 0b0000011111100000;
+    const blueMask  = 0b0000000000011111;
+
+    //String color565 = "0xFFE0";
+    //int colorAsInteger = Integer.parseInt(color.substring(2,color.length()), 16); // convert the Hex value to int
+
+    const R = ((((color565 >> 11) & 0x1F) * 527) + 23) >> 6;
+    const G = ((((color565 >> 5) & 0x3F) * 259) + 33) >> 6;
+    const B = (((color565 & 0x1F) * 527) + 23) >> 6;
+
+    const color = "#" + R.toString(16).padStart(2, '0') + G.toString(16).padStart(2, '0') + B.toString(16).padStart(2, '0')
+    return color;
+}
+
+function loadJSON(str_source) {
+
+    //#AFD42B
+    //0xAEA5
+
+    let source = JSON.parse(str_source)
+
+    document.getElementById("elements-title").textContent = "Project [" + source.name + "]"
+
+    source.setup.forEach(e => {
+        if (e.type === 'line') {
+            drawHLine(e.x, e.y, e.x1 - e.x, rgb565To888(e.color))
+        } else if (e.type === 'datetime') {
+            drawText(e.x, e.y, e.content.replace('H', '12').replace('i', '00'), rgb565To888(e.fgColor), FONTS.square )
+        }
+
+    })
 }
 
 

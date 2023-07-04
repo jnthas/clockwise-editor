@@ -43,7 +43,7 @@
 
             <div class="w3-card-4 w3-margin">
                 <header class="w3-container w3-blue-gray">
-                    <h4>Project [nyan-cat]</h4>
+                    <h4 id="elements-title">Project []</h4>
                 </header>
                 
                 <div class="w3-white">
@@ -148,14 +148,14 @@
                 
                 <div class="w3-container w3-white" style="padding: 0;">
                     <div class="w3-bar w3-light-gray" style="width: 100%;">
-                        <a href="#" class="w3-bar-item w3-hover-red">Load</a>
+                        <a href="#" onclick="loadJSON(document.getElementsByName('source')[0].value);" class="w3-bar-item w3-hover-red">Load</a>
                         <a href="#" class="w3-bar-item w3-hover-green">Update</a>
                         <a href="#" class="w3-bar-item w3-hover-blue">Download</a>
                     </div>
                 </div>
-
+                
                 <div class="w3-container w3-white w3-padding-16">
-                    <textarea class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source">
+                    <textarea  class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source">
 {
     "name": "Star Wars",
     "version": 1,
