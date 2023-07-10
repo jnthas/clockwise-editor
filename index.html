@@ -10,9 +10,8 @@
     <link rel="shortcut icon" type="image/x-icon"
         href="https://github.com/jnthas/clockwise/raw/gh-pages/static/images/favicon.png">
 
+    <script src="lib/png.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="lib/png.min.js"></script>
-
     <title>Clockwise Theme Editor</title>
 </head>
 <body>
@@ -28,15 +27,33 @@
                 </header>
                 
                 <div class="w3-container w3-white w3-padding  w3-left-align">
-                    <button title="Rect" class="w3-button w3-round w3-border" style="margin-bottom:4px;" onclick="test();"><i class="w3-large fa fa-square-o" style="width:16px;"></i></button>
-                    <button title="Fill Rect" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-square" style="width:16px;"></i></button>
-                    <button title="Circle" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-circle-o" style="width:16px;"></i></button>
-                    <button title="Fill Circle" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-circle" style="width:16px;"></i></button>
-                    <button title="Date/Time" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-calendar" style="width:16px;"></i></button>
-                    <button title="Line" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-minus" style="width:16px;"></i></button>
-                    <button title="Image" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-picture-o" style="width:16px;"></i></button>
-                    <button title="Text" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-font" style="width:16px;"></i></button>    
-                    <button title="Sprite" class="w3-button w3-round w3-border" style="margin-bottom:4px;"><i class="w3-large fa fa-video-camera" style="width:16px;"></i></button>    
+                    <button title="Rect" class="w3-button w3-round w3-border toolbox-button" onclick="test();">
+                        <i class="w3-large fa fa-square-o"></i>
+                    </button>
+                    <button title="Fill Rect" class="w3-button w3-round w3-border toolbox-button" >
+                        <i class="w3-large fa fa-square"></i>
+                    </button>
+                    <button title="Circle" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-circle-o"></i>
+                    </button>
+                    <button title="Fill Circle" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-circle"></i>
+                    </button>
+                    <button title="Date/Time" class="w3-button w3-round w3-border toolbox-button" onclick="DateTimeWidget.add(this)">
+                        <i class="w3-large fa fa-calendar"></i>
+                    </button>
+                    <button title="Line" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-minus"></i>
+                    </button>
+                    <button title="Image" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-picture-o"></i>
+                    </button>
+                    <button title="Text" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-font"></i>
+                    </button>    
+                    <button title="Sprite" class="w3-button w3-round w3-border toolbox-button">
+                        <i class="w3-large fa fa-film"></i>
+                    </button>    
                 </div>
             </div>
 
@@ -47,42 +64,31 @@
                 </header>
                 
                 <div class="w3-white">
-                    <ul class="w3-ul">
-                        
-                        <li class="w3-bar" style="width: 100%; padding: 0px 8px 0px 8px;">
-                            <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
-                            <div class="w3-bar-item" style="padding: 0 4px 0 4px;">
-                                <i class="w3-small fa fa-picture-o" style="width:16px;"></i>
-                                <span>Image</span>
-                            </div>
-                            
+                    <span><strong>Project</strong></span>
+                    <ul id="project-elements" class="w3-ul">
+                        <li id="project-properties" class="theme-element w3-bar w3-hover-light-grey"> 
+                            <input class="w3-radio element-radio" type="radio" name="base1" onclick="updateProperties(ProjectWidget, 0)">
+                            <span><i class="w3-small fa fa-file-text-o"></i> Properties</span>
                         </li>
-                        <li class="w3-bar" style="width: 100%; padding: 0px 8px 0px 8px;">
-                            <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
-                            <div class="w3-bar-item" style="padding: 0 4px 0 4px;">
-                                <i class="w3-small fa fa-calendar" style="width:16px;"></i>
-                                <span>Date/Time</span>
-                            </div>
-                        </li>
-                        <li class="w3-bar" style="width: 100%; padding: 0px 8px 0px 8px;">
-                            <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
-                            <div class="w3-bar-item" style="padding: 0 4px 0 4px;">
-                                <i class="w3-large fa fa-circle" style="width:16px;"></i>
-                                <span>Circle</span>
-                            </div>
-                        </li>
-
-
-                        <!--
-
-                        <li class="w3-display-container"><i class="w3-large fa fa-square-o" style="width:16px;"></i>Rect
-                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-display-right">&times;</span>
-                        </li>
-                        <li class="w3-display-container"><i class="w3-large fa fa-calendar" style="width:16px;"></i>Date/Time
-                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-display-right">&times;</span>
-                        </li>
-                    -->
                     </ul>
+
+                    <span><strong>Setup</strong></span>
+                    <ul id="setup-elements" class="w3-ul">
+                        <li id="base-widget-setup" class="theme-element w3-hover-light-grey w3-hide">
+                            <span onclick="removeWidget(this)" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                            <input class="w3-radio element-radio" type="radio" name="base1">
+                            <span></span>
+                        </li>
+                    </ul>
+                    <span><strong>Loop</strong></span>
+                    <ul id="loop-elements" class="w3-ul">
+                        <li id="base-widget-loop" class="theme-element w3-hover-light-grey w3-hide">
+                            <span onclick="removeWidget(this)" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                            <input class="w3-radio element-radio" type="radio" name="base1">
+                            <span></span>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
 
@@ -93,24 +99,68 @@
                 </header>
                 
                 <div class="w3-container w3-white" style="padding:0;">
-                    <table class="w3-table-all w3-small">
-                        <tr>
-                            <td class="w3-right-align" style="vertical-align: middle;padding:2px;"><strong>X</strong></td>
-                            <td style="padding:0;"><input class="w3-input w3-border w3-round" type="text" style="height:25px;"></td>
+                    <table id="properties" class="w3-table-all w3-small">
+                        <tr id="name">
+                            <td class="w3-right-align property-label">Name</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
                         </tr>
-                        <tr>
-                            <td class="w3-right-align" style="vertical-align: middle;padding:2px;"><strong>Y</strong></td>
-                            <td style="padding:0;"><input class="w3-input w3-border w3-round" type="text" style="height:25px;"></td>
+                        <tr id="version">
+                            <td class="w3-right-align property-label">Version</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
                         </tr>
-                        <tr>
-                            <td class="w3-right-align" style="vertical-align: middle;padding:2px;"><strong>Color</strong></td>
-                            <td style="padding:0;"><input class="w3-input w3-border w3-round" type="text" style="height:25px;"></td>
+                        <tr id="author">
+                            <td class="w3-right-align property-label">Author</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
                         </tr>
-                        <tr>
-                            <td class="w3-right-align" style="vertical-align: middle;padding:2px;"><strong>Sprite</strong></td>
-                            <td style="padding:0;"><input class="w3-input w3-border w3-round" type="text" style="height:25px;"></td>
+                        <tr id="delay">
+                            <td class="w3-right-align property-label">Delay (ms)</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
                         </tr>
-                        </table>
+                        <tr id="x">
+                            <td class="w3-right-align property-label">X</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                        </tr>
+                        <tr id="y">
+                            <td class="w3-right-align property-label">Y</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                        </tr>
+                        <tr id="x1">
+                            <td class="w3-right-align property-label">X1</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                        </tr>
+                        <tr id="y1">
+                            <td class="w3-right-align property-label">Y1</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                        </tr>
+                        <tr id="color">
+                            <td class="w3-right-align property-label">Color</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                        </tr>
+                        <tr id="fgColor">
+                            <td class="w3-right-align property-label">FG Color</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                        </tr>
+                        <tr id="bgColor">
+                            <td class="w3-right-align property-label">BG Color</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                        </tr>
+                        <tr id="font">
+                            <td class="w3-right-align property-label">Font</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
+                        </tr>
+                        <tr id="content">
+                            <td class="w3-right-align property-label">Content</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
+                        </tr>
+                        <tr id="sprite">
+                            <td class="w3-right-align property-label">Sprite</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                        </tr>
+                        <tr id="image">
+                            <td class="w3-right-align property-label">Image</td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -130,6 +180,15 @@
                 <header class="w3-container w3-blue-gray">
                     <h4>Display [64x64]</h4>
                 </header>
+
+                <div class="w3-container w3-white" style="padding: 0;">
+                    <div class="w3-bar w3-light-gray" style="width: 100%;">
+                        <div class="w3-bar-item w3-left">
+                            <input class="w3-check" type="checkbox" onclick="setRoundedPixels(this)" id="roundedPixels" name="roundedPixels">
+                            <label for="roundedPixels">Rounded Pixels</label>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="w3-container w3-white w3-padding-32 ">
                     <div class="led-matrix"></div>
@@ -148,59 +207,22 @@
                 
                 <div class="w3-container w3-white" style="padding: 0;">
                     <div class="w3-bar w3-light-gray" style="width: 100%;">
-                        <a href="#" onclick="loadJSON(document.getElementsByName('source')[0].value);" class="w3-bar-item w3-hover-red">Load</a>
-                        <a href="#" class="w3-bar-item w3-hover-green">Update</a>
+                        <a href="#" onclick="newTheme()" class="w3-bar-item w3-hover-blue">New</a>
+                        <a href="#" onclick="loadJSON(document.getElementsByName('source')[0].value);" class="w3-bar-item w3-hover-blue">Load</a>
+                        <a href="#" onclick="refresh(source)" class="w3-bar-item w3-hover-blue">Update</a>
                         <a href="#" class="w3-bar-item w3-hover-blue">Download</a>
+                        
+                        <!--
+                        <div class="w3-bar-item w3-left">
+                            <button title="Refresh Display" class="w3-button w3-tiny w3-round w3-border"><i class="w3-medium fa fa-retweet"></i></button>
+                        </div>
+                        -->
+                        
                     </div>
                 </div>
                 
                 <div class="w3-container w3-white w3-padding-16">
-                    <textarea  class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source">
-{
-    "name": "Star Wars",
-    "version": 1,
-    "author": "@jnthas",
-    "delay": 500,
-    "bgColor": 0, 
-    "setup": [
-        {
-            "type": "datetime",
-            "content": "H:i",
-            "font": "square",
-            "fgColor": 65282,
-            "bgColor": 0,
-            "x": 16,
-            "y": 53
-        },
-        {
-            "type": "line",
-            "color": 29582,
-            "x": 10,
-            "y": 40,
-            "x1": 54,
-            "y1": 40
-        }
-    ],
-    "sprites": [
-        [
-        {
-            "image": "iVBORw0KGgoAAAANSUhEUgAAADwAAAAaCAIAAABka6gOAAAB7UlEQVRYw7VYUW7DMAgl1NL+sxPs/oequgPsP5Ni78OJg2x4kDSzosZxKGDAj9dOpZTpMZE2ludMV8fH14+lob4iIspE7Fs55InKWr1l/Vpe8/Kat0cyxazv9hpUtUI45MZ+8bGj3Mf42CK/FW+8ciFj6ZiyqR1nOVJFy3OOuCtVmfK5Op39WHYqOkdHA3gnYA8ttKbMVh7sb/p4zGQFAKRCasAhr+5iMVYNq5W0PXJIU2ho+2yXcrpyM5V1w53fAMJwlupcfh7rHNIz4kFaXnP8IMeRu1lSs9xUlbX8fn9atV7FRqPpAgzdOKbHNBZh5/cY/uTUHJ9pkEOHc7FSBXIXH6HT3Nt2csJKeCysBMXWXlnmUvx4Yag+BdLuilXNW1F1B1FFifji2e1Z4XTiKOlIYyfd4khrgpSolIIpUa+BTJIkv8Jjr3LTJw8KpkQW6TXTxeS2Q7OPYdCJ1nE2u7Ss1zFSrsV0ioVJ7f9IifziHpi4WqbjHNc9mLcLCIR/BNhE+caWqVIiyYcw5ylrISKuN4vT6UQvTol2M6HsM+Jq8mSneouToRE3MCXq2EWQEuHenu6idfHhUiKX4SQJT02dGhtQG7dTIq+KNJTAcGFCDZ1AFdz2AHwRUxL/gJiR8ylOFn7fQYn01O1U+Q8sffOJdjixlAAAAABJRU5ErkJggg=="
-        },
-        {
-            "image": "iVBORw0KGgoAAAANSUhEUgAAADwAAAAaCAIAAABka6gOAAAB9ElEQVRYw71XUW7DMAi1XUv7T0+w+x+qSg+w/1Rq2Yc7ygw8SBctslrHIRgeGF4qEdVTLda1XZby7vXx+eVpGI9KKXSneqrhLizPr5TS7LGty7Yuz9viinnvzhpMtUI4ZcbPaNKJCeOXi+1PeOOVNyLWeTYlidSOo5zJou2yZMyVqjx5ulMXibIDs8lQvQH2BPjA0Hoy9VSbxth0mm9lFk0AgFBIDRjyYS4Wa+bGZiaNWy8mYaySfvLQp4vlm3xTbjzZDUoYjtKYy19eD/2cIGf5fruek6bIEOfrhhllVkV3ul3PXq4PMb1pf6MMHXjp5qLt1vB3pPLxK+dDmHWHC2ulWcjD+giNbvPeWBfnHIBKqvJQ4Efedj1/vHCp3lWkwxUvm5/obOsSts384l73PDgDHCUdYXYyLWpak6RERIQp0aSB5fErTfeqMHzyoGBKlGQHrJ/PMT48LQxZsiBqV82GPzJV5qtGKtyx72JhUnt42jyYQ0qUSG7FxM001XOc92DOAwhkPwIAUT6wZZqUSPIhzHmGzIswmZzOXMxTIkBltZ6pN5mQDZk+/vJkSNcNTIl0Y89QItzb+1G0Ln+FlChkOJ1ng6PqAqQX/4ESRVlkVQlcLryDr/sfqCq47YHyVVqZP2xN5MIeOTQAJXspkRk6tvMbjCseYLehOjIAAAAASUVORK5CYII="
-        }
-        ]
-    ],
-    "loop": [
-        {
-        "type": "sprite",
-        "sprite": 0,
-        "x": 2,
-        "y": 6
-        }
-    ]
-}
-                    </textarea>
+                    <textarea  class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source" id="source"></textarea>
                 </div>
 
             </div>

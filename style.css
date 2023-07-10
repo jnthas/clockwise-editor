@@ -36,3 +36,56 @@ input {
 .pixel {
     background-color: rgb(61, 61, 61);
 }
+
+button.toolbox-button {
+    margin-bottom:4px;
+}
+
+
+button.toolbox-button i {
+    width:16px;
+}
+
+li.theme-element {
+    padding: 4px 8px 4px 8px;
+    text-align: left;
+}
+
+li.theme-element input {   
+    width: 16px;
+    height: 16px;
+    top: 0px;
+    vertical-align: middle;
+}
+
+li.w3-bar {
+    display: block !important;
+}
+
+td.property-label {
+    vertical-align: middle;
+    padding: 2px;
+    font-weight: bold;
+}
+
+td.property-field {
+    padding: 0px;
+}
+
+td.property-field input {
+    height: 25px;
+}
+
+td.property-field input[type="color"] {
+    padding:0px;
+}
+
+.w3-check {
+    width: 16px;
+    height: 16px;
+    top: 4px;
+}
+
+label {
+    vertical-align: middle;
+} 
