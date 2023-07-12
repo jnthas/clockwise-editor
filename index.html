@@ -16,7 +16,7 @@
 </head>
 <body>
 
-    <div class="w3-row">
+    <div id="app" class="w3-row">
 
         <!-- Widgets and Properties -->
         <div class="w3-col s2 w3-center">
@@ -27,7 +27,7 @@
                 </header>
                 
                 <div class="w3-container w3-white w3-padding  w3-left-align">
-                    <button title="Rect" class="w3-button w3-round w3-border toolbox-button" onclick="test();">
+                    <button title="Rect" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-square-o"></i>
                     </button>
                     <button title="Fill Rect" class="w3-button w3-round w3-border toolbox-button" >
@@ -39,7 +39,7 @@
                     <button title="Fill Circle" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-circle"></i>
                     </button>
-                    <button title="Date/Time" class="w3-button w3-round w3-border toolbox-button" onclick="DateTimeWidget.add(this)">
+                    <button id="btn-datetime" title="Date/Time" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-calendar"></i>
                     </button>
                     <button title="Line" class="w3-button w3-round w3-border toolbox-button">
@@ -64,30 +64,34 @@
                 </header>
                 
                 <div class="w3-white">
-                    <span><strong>Project</strong></span>
+                    <span><strong>Project</strong>
                     <ul id="project-elements" class="w3-ul">
                         <li id="project-properties" class="theme-element w3-bar w3-hover-light-grey"> 
-                            <input class="w3-radio element-radio" type="radio" name="base1" onclick="updateProperties(ProjectWidget, 0)">
+                            <input id="radio-project" class="w3-radio element-radio" type="radio" name="base1">
                             <span><i class="w3-small fa fa-file-text-o"></i> Properties</span>
                         </li>
                     </ul>
+                    </span>
 
-                    <span><strong>Setup</strong></span>
+                    <span><strong>Setup</strong>
                     <ul id="setup-elements" class="w3-ul">
                         <li id="base-widget-setup" class="theme-element w3-hover-light-grey w3-hide">
-                            <span onclick="removeWidget(this)" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                            <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
                             <input class="w3-radio element-radio" type="radio" name="base1">
                             <span></span>
                         </li>
                     </ul>
-                    <span><strong>Loop</strong></span>
+                    </span>
+
+                    <span><strong>Loop</strong>
                     <ul id="loop-elements" class="w3-ul">
                         <li id="base-widget-loop" class="theme-element w3-hover-light-grey w3-hide">
-                            <span onclick="removeWidget(this)" class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                            <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
                             <input class="w3-radio element-radio" type="radio" name="base1">
                             <span></span>
                         </li>
                     </ul>
+                    </span>
 
                 </div>
             </div>
@@ -118,31 +122,31 @@
                         </tr>
                         <tr id="x">
                             <td class="w3-right-align property-label">X</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number" min="0" max="64"></td>
                         </tr>
                         <tr id="y">
                             <td class="w3-right-align property-label">Y</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number" min="0" max="64"></td>
                         </tr>
                         <tr id="x1">
                             <td class="w3-right-align property-label">X1</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number" min="0" max="64"></td>
                         </tr>
                         <tr id="y1">
                             <td class="w3-right-align property-label">Y1</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="number" min="0" max="64"></td>
                         </tr>
                         <tr id="color">
                             <td class="w3-right-align property-label">Color</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color" min="0" max="65535"></td>
                         </tr>
                         <tr id="fgColor">
                             <td class="w3-right-align property-label">FG Color</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color" min="0" max="65535"></td>
                         </tr>
                         <tr id="bgColor">
                             <td class="w3-right-align property-label">BG Color</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color"></td>
+                            <td class="property-field"><input class="w3-input w3-border w3-round" type="color" min="0" max="65535"></td>
                         </tr>
                         <tr id="font">
                             <td class="w3-right-align property-label">Font</td>
@@ -184,7 +188,7 @@
                 <div class="w3-container w3-white" style="padding: 0;">
                     <div class="w3-bar w3-light-gray" style="width: 100%;">
                         <div class="w3-bar-item w3-left">
-                            <input class="w3-check" type="checkbox" onclick="setRoundedPixels(this)" id="roundedPixels" name="roundedPixels">
+                            <input id="roundedPixels" name="roundedPixels" class="w3-check" type="checkbox">
                             <label for="roundedPixels">Rounded Pixels</label>
                         </div>
                     </div>
@@ -194,10 +198,8 @@
                     <div class="led-matrix"></div>
                 </div>
             </div>
-            
         </div>
         
-
         <!-- Generated JSON -->
         <div class="w3-col s6 w3-center">
             <div class="w3-card-4 w3-margin">
@@ -207,10 +209,10 @@
                 
                 <div class="w3-container w3-white" style="padding: 0;">
                     <div class="w3-bar w3-light-gray" style="width: 100%;">
-                        <a href="#" onclick="newTheme()" class="w3-bar-item w3-hover-blue">New</a>
-                        <a href="#" onclick="loadJSON(document.getElementsByName('source')[0].value);" class="w3-bar-item w3-hover-blue">Load</a>
-                        <a href="#" onclick="refresh(source)" class="w3-bar-item w3-hover-blue">Update</a>
-                        <a href="#" class="w3-bar-item w3-hover-blue">Download</a>
+                        <a id="source-new" href="#" class="w3-bar-item w3-hover-blue">New</a>
+                        <a id="source-load" href="#" class="w3-bar-item w3-hover-blue">Load</a>
+                        <a id="source-update" href="#" class="w3-bar-item w3-hover-blue">Update</a>
+                        <a id="source-download" href="#" class="w3-bar-item w3-hover-blue">Download</a>
                         
                         <!--
                         <div class="w3-bar-item w3-left">
@@ -230,7 +232,11 @@
         </div>
     </div>
 
-    
-    <script src="main.js"></script>
+    <script type="module" src="./modules/global.js"></script>
+    <script type="module" src="./modules/display.js"></script>
+    <script type="module" src="./modules/utils.js"></script>
+    <script type="module" src="./modules/widgets.js"></script>
+    <script type="module" src="main.js"></script>
+
 </body>
 </html>
