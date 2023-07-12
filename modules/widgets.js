@@ -12,18 +12,6 @@ const FONTS = {
 
 const app = document.getElementById('app')
 
-
-export function setSelected(widget, obj, input) {
-    //console.log("current selected: ", widget.title, obj.index, input.parentElement.parentElement.id)
-        
-    Global.SelectedWidget = {
-        widget: widget,
-        object: obj,
-        method: input.parentElement.parentElement.id.split('-')[0]
-
-    }
-}
-
 export function addSetupElement(obj, widget) {
     
     const found = document.querySelector('#' + obj.type + obj.index)
@@ -41,8 +29,7 @@ export function addSetupElement(obj, widget) {
         // Title
         clone.getElementsByTagName('span')[1].innerHTML = `<i class='w3-small fa ${widget.icon}'></i> ${widget.title}`
         // Radio
-        clone.getElementsByTagName('input')[0].addEventListener('click', function(){updateProperties(widget, obj.index, 'setup')})
-        clone.getElementsByTagName('input')[0].addEventListener('click', function(ev){setSelected(widget, obj, ev.target)})
+        clone.getElementsByTagName('input')[0].addEventListener('click', e => app.dispatchEvent(new CustomEvent('widget-selected', {detail:{widget:widget, object:obj, input:e.target}})))
     
         base.before(clone)
     }
@@ -75,24 +62,6 @@ export function addLoopElement(obj, widget) {
             count++
         })
     }
-}
-
-export function updateProperties(widget, index, method) {
-    
-    const allProperties = document.querySelectorAll("#properties tr")
-
-    allProperties.forEach(p => {
-        if (Object.keys(widget.properties).includes(p.id)) {
-            p.style.display = 'table-row'
-
-            let input = document.querySelectorAll("#properties #" + p.id + " input")[0]
-
-            input.value = widget.getValue(index, p.id)
-        } else {
-            p.style.display = 'none'
-        }
-
-    })
 }
 
 
@@ -348,10 +317,7 @@ const Widgets = {
     SpriteWidget: SpriteWidget,
     addSetupElement: addSetupElement,
     addLoopElement: addLoopElement,
-    updateProperties: updateProperties,
-    removeWidget: removeWidget,
-    setSelected: setSelected
-
+    removeWidget: removeWidget
 };
 
 export default Widgets; 

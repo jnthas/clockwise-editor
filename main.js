@@ -38,6 +38,37 @@ function refresh(ev, source_ref) {
     document.getElementById("source").value = JSON.stringify(source_ref, null, 2)
 }
 
+
+function updateProperties(widget, index) {
+    
+    const allProperties = document.querySelectorAll("#properties tr")
+
+    allProperties.forEach(p => {
+        if (Object.keys(widget.properties).includes(p.id)) {
+            p.style.display = 'table-row'
+
+            let input = document.querySelectorAll("#properties #" + p.id + " input")[0]
+
+            input.value = widget.getValue(index, p.id)
+        } else {
+            p.style.display = 'none'
+        }
+
+    })
+}
+
+function setSelected(event, a) {
+    //console.log("current selected: ", widget.title, obj.index, input.parentElement.parentElement.id)
+        
+    Global.SelectedWidget = {
+        widget: event.widget,
+        object: event.object,
+        method: event.input.parentElement.parentElement.id.split('-')[0]
+    }
+
+    updateProperties(event.widget, event.object.index)
+}
+
 function refreshDisplay(ev, source_ref) {
     if (!source_ref)
         source_ref = Global.Source;
@@ -112,8 +143,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     const projProperties = document.querySelector('#radio-project')
-    projProperties.addEventListener('click', ()=>{Widgets.updateProperties(Widgets.ProjectWidget, 0)});
-    projProperties.addEventListener('click', ()=>{Widgets.setSelected(Widgets.ProjectWidget, {index:0}, projProperties)});
+    projProperties.addEventListener('click', ()=>{setSelected({widget:Widgets.ProjectWidget, object:{index:0}, input:projProperties})});
 
 
     //<!-- Properties -->
@@ -131,5 +161,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 document.getElementById('app').addEventListener('refresh-display', refreshDisplay)
+document.getElementById('app').addEventListener('widget-selected', e => setSelected(e.detail))
 
 Display.createDisplay()
