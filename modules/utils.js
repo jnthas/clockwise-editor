@@ -68,13 +68,32 @@ export function getInputValue(input) {
 
 }
 
+export function getMethod(elementId) {
+    return elementId.split('-')[0]
+}
 
+
+export function generateUID() {
+    var firstPart = (Math.random() * 46656) | 0
+    var secondPart = (Math.random() * 46656) | 0
+    firstPart = ("000" + firstPart.toString(36)).slice(-3)
+    secondPart = ("000" + secondPart.toString(36)).slice(-3)
+    return firstPart + secondPart
+}
+
+
+export function getIndexById(array, id) {
+    return array.map(x => x.id).indexOf(id);
+}
 
 const Utils = {
     convert16To24Bits: convert16To24Bits,
     convert24To16Bits: convert24To16Bits,
     formatDateTime: formatDateTime,
-    getInputValue: getInputValue
+    getInputValue: getInputValue,
+    getMethod: getMethod,
+    generateUID: generateUID,
+    getIndexById: getIndexById
 
 };
 

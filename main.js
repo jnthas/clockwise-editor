@@ -16,7 +16,7 @@ function refresh(ev, source_ref) {
     source_ref.setup.forEach(e => {
         Widgets.All.forEach(w => {
             if (w.is(e.type)) {
-                e.index = index++;
+                e.id = Utils.generateUID()
                 w.add(e)
                 w.render(e)
             }
@@ -28,7 +28,7 @@ function refresh(ev, source_ref) {
     source_ref.loop.forEach(e => {
         Widgets.All.forEach(w => {
             if (w.is(e.type)) {
-                e.index = index++;
+                e.id = Utils.generateUID()
                 w.add(e)
                 w.render(e)
             }
@@ -39,7 +39,7 @@ function refresh(ev, source_ref) {
 }
 
 
-function updateProperties(widget, index) {
+function updateProperties(widget, id) {
     
     const allProperties = document.querySelectorAll("#properties tr")
 
@@ -49,7 +49,7 @@ function updateProperties(widget, index) {
 
             let input = document.querySelectorAll("#properties #" + p.id + " input")[0]
 
-            input.value = widget.getValue(index, p.id)
+            input.value = widget.getValue(id, p.id)
         } else {
             p.style.display = 'none'
         }
@@ -58,15 +58,15 @@ function updateProperties(widget, index) {
 }
 
 function setSelected(event, a) {
-    //console.log("current selected: ", widget.title, obj.index, input.parentElement.parentElement.id)
+    //console.log("current selected: ", widget.title, obj.id, input.parentElement.parentElement.id)
         
     Global.SelectedWidget = {
         widget: event.widget,
         object: event.object,
-        method: event.input.parentElement.parentElement.id.split('-')[0]
+        method: Utils.getMethod(event.input.parentElement.parentElement.id)
     }
 
-    updateProperties(event.widget, event.object.index)
+    updateProperties(event.widget, event.object.id)
 }
 
 function refreshDisplay(ev, source_ref) {

@@ -14,18 +14,18 @@ const app = document.getElementById('app')
 
 export function addSetupElement(obj, widget) {
     
-    const found = document.querySelector('#' + obj.type + obj.index)
+    const found = document.querySelector('#' + obj.type + obj.id)
 
     if (!found) {
 
         const base = document.querySelector('#base-widget-setup')
         let clone = base.cloneNode(true)
-        clone.id = obj.type + obj.index;
+        clone.id = obj.type + obj.id;
         clone.classList.remove('w3-hide')
         clone.classList.add('w3-bar')
         
         // Remove Widget Button
-        clone.getElementsByTagName('span')[0].addEventListener('click', removeWidget)
+        clone.getElementsByTagName('span')[0].addEventListener('click', () => widget.remove(clone, obj))
         // Title
         clone.getElementsByTagName('span')[1].innerHTML = `<i class='w3-small fa ${widget.icon}'></i> ${widget.title}`
         // Radio
@@ -39,7 +39,7 @@ export function addLoopElement(obj, widget) {
     
     if (widget.is('sprite')) {
 
-        const widgetIndex = obj.index
+        const widgetIndex = obj.id
         
         let count = 0;
 
@@ -70,7 +70,6 @@ export const SpriteWidget = {
     icon: 'fa-film',
     properties: {
         type: 'sprite',
-        index: 0,
         x: 0,
         y: 0,
         sprite: 0,
@@ -116,7 +115,6 @@ export const DateTimeWidget = {
     icon: 'fa-calendar',
     properties: {
         type: 'datetime',
-        index: 0,
         x: 0,
         y: 0,
         content: '',
@@ -130,30 +128,38 @@ export const DateTimeWidget = {
     render: function(obj) {
         Display.drawText(obj.x, obj.y, Utils.formatDateTime(obj.content), Utils.convert16To24Bits(obj.fgColor), FONTS[obj.font])
     },
-    getValue: function(widgetIndex, propertyName) {
+    getValue: function(id, propertyName) {
+        const method = Global.SelectedWidget.method
+        const index = Utils.getIndexById(Global.Source[method], id)
+
         if (propertyName.toLowerCase().indexOf('color') >= 0) {
-            return Utils.convert16To24Bits(Global.Source.setup[widgetIndex][propertyName])
+            return Utils.convert16To24Bits(Global.Source.setup[index][propertyName])
         }
 
-        return Global.Source.setup[widgetIndex][propertyName]
+        return Global.Source.setup[index][propertyName]
     },
     onChange: function(input) {
         const method = Global.SelectedWidget.method
         const propertyName = input.parentElement.parentElement.id
         const obj = Global.SelectedWidget.object
+        const index = Utils.getIndexById(Global.Source[method], obj.id)
 
-        Global.Source[method][obj.index][propertyName] = Utils.getInputValue(input)
+        Global.Source[method][index][propertyName] = Utils.getInputValue(input)
 
         app.dispatchEvent(new Event('refresh-display'));
     },
     add: function(obj) {
         Global.Source.setup.push(obj)
         addSetupElement(obj, this)
+        app.dispatchEvent(new Event('refresh-display'));
     },
     create: function() {
         let obj = { ...this.properties }
-        obj.index = Global.Source.setup.length
+        obj.id = Utils.generateUID()
         this.add(obj)
+    },
+    remove: function(elem, object) {
+        removeWidget(elem, object)
     }
 };
 
@@ -162,7 +168,6 @@ export const LineWidget = {
     icon: 'fa-minus',
     properties: {
         type: 'line',
-        index: 0,
         x: 0,
         y: 0,
         x1: 0,
@@ -198,7 +203,6 @@ export const TextWidget = {
     icon: 'fa-font',
     properties: {
         type: 'text',
-        index: 0,
         x: 0,
         y: 0,
         content: '',
@@ -236,7 +240,6 @@ export const ImageWidget = {
     properties: ['x', 'y', 'image'],
     properties: {
         type: 'image',
-        index: 0,
         x: 0,
         y: 0,
         image: ''
@@ -265,7 +268,6 @@ export const ProjectWidget = {
     icon: 'fa-sticky-note-o',
     properties: {
         type: 'project',
-        index: 0,
         name: 'New',
         version: 1,
         author: '', 
@@ -294,9 +296,20 @@ export const ProjectWidget = {
 };
 
 
-function removeWidget() {
-    this.parentElement.classList.add('w3-hide')
-    this.parentElement.classList.remove('w3-bar')
+function removeWidget(elem, object) {
+    const method = Utils.getMethod(elem.parentElement.id)
+    const index = Utils.getIndexById(Global.Source[method], object.id)
+
+    Global.Source[method].splice(index, 1)
+
+    elem.remove()
+    
+    if (Global.Source[method].length > 0)
+        document.querySelectorAll('#setup-elements input[type="radio"]')[0].click()
+    else 
+        document.querySelectorAll('#project-elements input[type="radio"]')[0].click()
+    
+    app.dispatchEvent(new Event('refresh-display'))
 }
 
 export const All = [
