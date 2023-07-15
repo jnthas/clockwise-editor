@@ -3,6 +3,9 @@ import Display from "./modules/display.js"
 import Utils from "./modules/utils.js"
 import Widgets from "./modules/widgets.js"
 
+const methods = ['setup','loop']
+
+
 function refresh(ev, source_ref) {
     if (!source_ref)
         source_ref = Global.Source;
@@ -11,27 +14,14 @@ function refresh(ev, source_ref) {
     
     Display.clearScreen(Utils.convert16To24Bits(Global.Source.bgColor))
 
-    let index = 0;
-
-    source_ref.setup.forEach(e => {
-        Widgets.All.forEach(w => {
-            if (w.is(e.type)) {
-                e.id = Utils.generateUID()
-                w.add(e)
-                w.render(e)
-            }
-        })
-    })
-
-    index = 0;
-
-    source_ref.loop.forEach(e => {
-        Widgets.All.forEach(w => {
-            if (w.is(e.type)) {
-                e.id = Utils.generateUID()
-                w.add(e)
-                w.render(e)
-            }
+    methods.forEach((m) => {
+        source_ref[m].forEach(e => {
+            Widgets.All.forEach(w => {
+                if (w.is(e.type)) {
+                    w.add(e, m)
+                    w.render(e)
+                }
+            })
         })
     })
 
@@ -53,7 +43,6 @@ function updateProperties(widget, id) {
         } else {
             p.style.display = 'none'
         }
-
     })
 }
 
@@ -63,7 +52,8 @@ function setSelected(event, a) {
     Global.SelectedWidget = {
         widget: event.widget,
         object: event.object,
-        method: Utils.getMethod(event.input.parentElement.parentElement.id)
+        method: Utils.getMethod(event.input.parentElement.parentElement.id),
+        input: event.input
     }
 
     updateProperties(event.widget, event.object.id)
@@ -75,22 +65,16 @@ function refreshDisplay(ev, source_ref) {
     
     Display.clearScreen(Utils.convert16To24Bits(Global.Source.bgColor))
 
-    source_ref.setup.forEach(e => {
-        Widgets.All.forEach(w => {
-            if (w.is(e.type)) {
-                w.render(e)
-            }
+    methods.forEach(m => {
+        source_ref[m].forEach(e => {
+            Widgets.All.forEach(w => {
+                if (w.is(e.type)) {
+                    w.render(e)
+                }
+            })
         })
     })
-
-    source_ref.loop.forEach(e => {
-        Widgets.All.forEach(w => {
-            if (w.is(e.type)) {
-                w.render(e)
-            }
-        })
-    })
-
+    
     document.getElementById("source").value = JSON.stringify(source_ref, null, 2)
 }
 

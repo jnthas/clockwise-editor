@@ -12,56 +12,47 @@ const FONTS = {
 
 const app = document.getElementById('app')
 
-export function addSetupElement(obj, widget) {
-    
-    const found = document.querySelector('#' + obj.type + obj.id)
+export function addElement(obj, widget, method) {
 
-    if (!found) {
+    let commonAdd = function(secLevelElem, secLevelArray) {
 
-        const base = document.querySelector('#base-widget-setup')
-        let clone = base.cloneNode(true)
-        clone.id = obj.type + obj.id;
-        clone.classList.remove('w3-hide')
-        clone.classList.add('w3-bar')
+        let elemId = obj.type + '-' + obj.id 
+        let imgIndex = ''
         
-        // Remove Widget Button
-        clone.getElementsByTagName('span')[0].addEventListener('click', () => widget.remove(clone, obj))
-        // Title
-        clone.getElementsByTagName('span')[1].innerHTML = `<i class='w3-small fa ${widget.icon}'></i> ${widget.title}`
-        // Radio
-        clone.getElementsByTagName('input')[0].addEventListener('click', e => app.dispatchEvent(new CustomEvent('widget-selected', {detail:{widget:widget, object:obj, input:e.target}})))
-    
-        base.before(clone)
-    }
-}
+        if (secLevelElem) {
+            elemId = elemId + '-' + secLevelElem.id
+            imgIndex = ' - ' + Utils.getIndexById(secLevelArray, secLevelElem.id)
+        }
 
-export function addLoopElement(obj, widget) {
-    
-    if (widget.is('sprite')) {
+        const found = document.querySelector('#' + elemId)
 
-        const widgetIndex = obj.id
-        
-        let count = 0;
-
-        Global.Source.sprites[obj.sprite].forEach(s => {
-
-            const base = document.querySelector('#base-widget-loop')
+        if (!found) {
+            const base = document.querySelector('#base-widget-' + method)
             let clone = base.cloneNode(true)
-            const imageIndex = count
-            clone.id = obj.type + widgetIndex.toString() + imageIndex.toString();
+            
+            clone.id = elemId
+
             clone.classList.remove('w3-hide')
-            clone.classList.add('w3-bar')        
+            clone.classList.add('w3-bar')
 
             // Remove Widget Button
-            clone.getElementsByTagName('span')[0].addEventListener('click', removeWidget)
+            clone.getElementsByTagName('span')[0].addEventListener('click', () => widget.remove(clone, obj))
             // Title
-            clone.getElementsByTagName('span')[1].innerHTML = `<i class='w3-small fa ${widget.icon}'></i> ${widget.title}[${widgetIndex}] ${imageIndex}`
+            clone.getElementsByTagName('span')[1].innerHTML = `<i class='w3-small fa ${widget.icon}'></i> ${widget.title} [${obj.id}]${imgIndex}`
             // Radio
-            clone.getElementsByTagName('input')[0].addEventListener('click', function(){updateProperties(widget, [widgetIndex, imageIndex], 'loop')})
+            clone.getElementsByTagName('input')[0].addEventListener('click', e => app.dispatchEvent(new CustomEvent('widget-selected', {detail:{widget:widget, object:obj, input:e.target}})))
             base.before(clone)
-            count++
-        })
+        }
     }
+
+    if (widget.is('sprite')) {
+        Global.Source.sprites[obj.sprite].forEach(img => {
+            commonAdd(img, Global.Source.sprites[obj.sprite])
+        })
+    } else {
+        commonAdd()
+    }
+
 }
 
 
@@ -82,31 +73,74 @@ export const SpriteWidget = {
         // Draws the first frame
         Display.drawImage(obj.x, obj.y, Global.Source.sprites[obj.sprite][0].image)
     },
-    getValue: function(indexes, propertyName) {
+    getValue: function(id, propertyName) {
 
-        const widgetIndex = indexes[0]
-        const imageIndex = indexes[1]
+        const method = Global.SelectedWidget.method
+        const index = Utils.getIndexById(Global.Source[method], id)
 
         if (propertyName === 'image') {
-            const spriteIndex = Global.Source.loop[widgetIndex].sprite
+            const spriteIndex = Global.Source[method][index].sprite
+            const imageId = Global.SelectedWidget.input.parentElement.id.split('-')[2]
+            const imgIndex = Utils.getIndexById(Global.Source.sprites[spriteIndex], imageId)
             // Update the current frame
-            Display.drawImage(Global.Source.loop[widgetIndex].x, Global.Source.loop[widgetIndex].y, Global.Source.sprites[spriteIndex][imageIndex].image)
-            return Global.Source.sprites[spriteIndex][imageIndex].image
+            Display.drawImage(Global.Source[method][index].x, Global.Source[method][index].y, Global.Source.sprites[spriteIndex][imgIndex].image)
+            return Global.Source.sprites[spriteIndex][imgIndex].image
         }
 
-        return Global.Source.loop[widgetIndex][propertyName]
+        return Global.Source[method][index][propertyName]
     },
-    onChange: function(method, index, propertyName, input) {
-        Global.Source[method][index][propertyName] = input.value
-        //refresh(Global.Source)
+    onChange: function(input) {
+        const method = Global.SelectedWidget.method
+        const propertyName = input.parentElement.parentElement.id
+        const obj = Global.SelectedWidget.object
+        const index = Utils.getIndexById(Global.Source[method], obj.id)
+
+        Global.Source[method][index][propertyName] = Utils.getInputValue(input)
+
+        app.dispatchEvent(new Event('refresh-display'));
     },
-    add: function(obj) {
-        if (!obj) {
-            obj = {}
+    add: function(obj, method) {
+        if (!obj.hasOwnProperty('id')) {
+            obj.id = Utils.generateUID()
         }
+
+        Global.Source.sprites[obj.sprite].forEach(s => {
+            if (!s.hasOwnProperty('id')) {
+                s.id = Utils.generateUID()
+            }
+        })
+
+        addElement(obj, this, method)
+        app.dispatchEvent(new Event('refresh-display'));
+    },
+    create: function() {
+        let obj = { ...this.properties }
+        Global.Source[method].push(obj)
+        this.add(obj)
+    },
+    remove: function(elem, object) {
+        // if there are more than one frame, removes just the sprite otherwise remove the element in the loop
         
-        Global.Source.setup.push(obj)
-        addSetupElement(obj, this)
+        //removes the image frame
+        const imageId = elem.id.split('-')[2]
+        const imageIndex = Utils.getIndexById(Global.Source.sprites[object.sprite], imageId)
+        Global.Source.sprites[object.sprite].splice(imageIndex, 1)
+
+        const allSpritesRefImage = Global.Source.loop.filter(s => (s.sprite === object.sprite))
+
+        allSpritesRefImage.forEach(s => {
+
+            if (Global.Source.sprites[s.sprite].length === 0) {
+                //removes the object in the loop array
+                const index = Utils.getIndexById(Global.Source.loop, s.id)
+                Global.Source.loop.splice(index, 1)
+            }
+
+            const elemId = s.type + '-' + s.id + '-' + imageId
+            const docElem = document.getElementById(elemId)
+            removeWidget(docElem)
+        })
+        
     }
 };
 
@@ -148,18 +182,26 @@ export const DateTimeWidget = {
 
         app.dispatchEvent(new Event('refresh-display'));
     },
-    add: function(obj) {
-        Global.Source.setup.push(obj)
-        addSetupElement(obj, this)
+    add: function(obj, method) {
+
+        if (!obj.hasOwnProperty('id')) {
+            obj.id = Utils.generateUID()
+        }
+
+        addElement(obj, this, method)
         app.dispatchEvent(new Event('refresh-display'));
     },
     create: function() {
         let obj = { ...this.properties }
-        obj.id = Utils.generateUID()
+        Global.Source[method].push(obj)
         this.add(obj)
     },
     remove: function(elem, object) {
-        removeWidget(elem, object)
+        const method = Utils.getMethod(elem.parentElement.id)
+        const index = Utils.getIndexById(Global.Source[method], object.id)
+        Global.Source[method].splice(index, 1)
+
+        removeWidget(elem)
     }
 };
 
@@ -193,7 +235,7 @@ export const LineWidget = {
     },
     add: function(obj) {
         Global.Source.setup.push(obj)
-        addSetupElement(obj, this)
+        //addSetupElement(obj, this)
     }
 };
 
@@ -229,7 +271,7 @@ export const TextWidget = {
     },
     add: function(obj) {
         Global.Source.setup.push(obj)
-        addSetupElement(obj, this)
+        //addSetupElement(obj, this)
     }
 };
 
@@ -259,7 +301,7 @@ export const ImageWidget = {
     },
     add: function(obj) {
         Global.Source.setup.push(obj)
-        addSetupElement(obj, this)
+        //addSetupElement(obj, this)
     }
 };
 
@@ -296,12 +338,9 @@ export const ProjectWidget = {
 };
 
 
-function removeWidget(elem, object) {
+function removeWidget(elem) {
     const method = Utils.getMethod(elem.parentElement.id)
-    const index = Utils.getIndexById(Global.Source[method], object.id)
-
-    Global.Source[method].splice(index, 1)
-
+    
     elem.remove()
     
     if (Global.Source[method].length > 0)
@@ -328,8 +367,6 @@ const Widgets = {
     LineWidget: LineWidget,
     DateTimeWidget: DateTimeWidget,
     SpriteWidget: SpriteWidget,
-    addSetupElement: addSetupElement,
-    addLoopElement: addLoopElement,
     removeWidget: removeWidget
 };
 
