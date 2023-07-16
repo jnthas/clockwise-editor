@@ -7,13 +7,12 @@ let currentWidget = {
 
 let source = null
 
-
-
 /**
  *  Global.SelectedWidget = {
  *    widget = SpriteWidget, DateTimeWidget etc
  *    object = Source[].object
- *    method: setup / loop
+ *    method = setup / loop
+ *    input = html element 
  *  }
  *  
  */

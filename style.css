@@ -89,3 +89,31 @@ td.property-field input[type="color"] {
 label {
     vertical-align: middle;
 } 
+
+td.property-field #image-b64 {
+    display: inline;
+    width: 80%;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    float: right;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+
+.custom-file-upload:hover {
+    border: 1px solid #888;
+}
+
+.btn-accordions {
+    font-weight: bolder;
+    padding: 4px 8px;
+}
+
+.source-menu {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -86,6 +86,15 @@ export function getIndexById(array, id) {
     return array.map(x => x.id).indexOf(id);
 }
 
+export function slugify(str) {
+    return str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 const Utils = {
     convert16To24Bits: convert16To24Bits,
     convert24To16Bits: convert24To16Bits,
@@ -93,7 +102,8 @@ const Utils = {
     getInputValue: getInputValue,
     getMethod: getMethod,
     generateUID: generateUID,
-    getIndexById: getIndexById
+    getIndexById: getIndexById,
+    slugify: slugify
 
 };
 

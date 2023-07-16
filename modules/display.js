@@ -67,22 +67,25 @@ export function drawRect(x, y, width, height, color) {
     drawVLine(x + width - 1, y, height, color);
 }
 
-export function drawText(x, y, text, color, char_size) {
-    // char_size = [width, height, space]
+export function drawText(x, y, text, color, font) {
+    // font = [width, height, space]
 
-    if (!char_size) char_size = FONTS["default"]
+    if (!font) font = FONTS.default
 
     for (let i = 0; i < text.length; i++) {
         //if (text.charAt(i).match(/^[A-Za-z]+$/)) {
         if (text.charAt(i) != ' ') {
-            drawRect(x, y - char_size[1], char_size[0], char_size[1], color);
+            drawRect(x, y - (font.anchor === 0 ? font.height : 0), font.width, font.height, color);
         }
-        x += char_size[0] + char_size[2];
+        x += font.width + font.space;
     }
 }
 
 
 export function drawImage(x, y, image) {
+    
+    if (!image) return;
+
     let x_temp = x;
     let y_temp = y;
 
@@ -94,16 +97,22 @@ export function drawImage(x, y, image) {
 
     png.fromImageData(uint8Image)
         .then(pngData => {
-            //console.log( 'png', pngData );
-            let img = pngData.decodePixels()
-            //console.log( 'decoded', img );
 
-            for (let i = 0; i < img.length; i += pngData.pixelBitlength / 8) {
+            if (pngData.colors === 1) {
+                showModal('Error', '1-bit PNG not supported yet')
+                return
+            }
+
+            let img = pngData.decodePixels()
+
+            for (let i = 0; i < img.length; i += Math.ceil(pngData.pixelBitlength / 8)) {
+                let color = ''
+
                 // little endian
                 let r = img[i];
                 let g = img[i + 1];
                 let b = img[i + 2];
-                let color = "#" +
+                color = "#" +
                     r.toString(16).padStart(2, '0') +
                     g.toString(16).padStart(2, '0') +
                     b.toString(16).padStart(2, '0');
@@ -117,10 +126,19 @@ export function drawImage(x, y, image) {
         });
 }
 
+
+export function showModal(title, msg) {
+    document.getElementById("modal-title").textContent = title
+    document.getElementById("modal-msg").textContent = msg
+    document.getElementById('msgbox').style.display = 'block'
+
+}
+
 const Display = {
     createDisplay: createDisplay,
     clearScreen: clearScreen,
     setRoundedPixels: setRoundedPixels,
+    showModal: showModal,
     drawPixel: drawPixel,
     drawHLine: drawHLine,
     drawVLine: drawVLine,

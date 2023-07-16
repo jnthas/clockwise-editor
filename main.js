@@ -3,7 +3,7 @@ import Display from "./modules/display.js"
 import Utils from "./modules/utils.js"
 import Widgets from "./modules/widgets.js"
 
-const methods = ['setup','loop']
+const methods = ['setup', 'loop']
 
 
 function refresh(ev, source_ref) {
@@ -11,7 +11,7 @@ function refresh(ev, source_ref) {
         source_ref = Global.Source;
 
     document.getElementById("elements-title").textContent = "Project [" + Global.Source.name + "]"
-    
+
     Display.clearScreen(Utils.convert16To24Bits(Global.Source.bgColor))
 
     methods.forEach((m) => {
@@ -26,11 +26,12 @@ function refresh(ev, source_ref) {
     })
 
     document.getElementById("source").value = JSON.stringify(source_ref, null, 2)
+    document.querySelector('#project-properties input[type="radio"]').click()
 }
 
 
 function updateProperties(widget, id) {
-    
+
     const allProperties = document.querySelectorAll("#properties tr")
 
     allProperties.forEach(p => {
@@ -48,7 +49,7 @@ function updateProperties(widget, id) {
 
 function setSelected(event, a) {
     //console.log("current selected: ", widget.title, obj.id, input.parentElement.parentElement.id)
-        
+
     Global.SelectedWidget = {
         widget: event.widget,
         object: event.object,
@@ -62,7 +63,7 @@ function setSelected(event, a) {
 function refreshDisplay(ev, source_ref) {
     if (!source_ref)
         source_ref = Global.Source;
-    
+
     Display.clearScreen(Utils.convert16To24Bits(Global.Source.bgColor))
 
     methods.forEach(m => {
@@ -74,39 +75,34 @@ function refreshDisplay(ev, source_ref) {
             })
         })
     })
-    
+
     document.getElementById("source").value = JSON.stringify(source_ref, null, 2)
 }
 
-function loadJSON(str_source) {
-    if (!str_source) 
-        return;
+function reset() {
+    Global.Source = {}
+    Global.SelectedWidget = {}
 
-    Global.Source = JSON.parse(str_source)
-    refresh(Global.Source)
+    const dontRemove = ['project-properties', 'base-widget-setup', 'base-widget-loop']
 
-    document.querySelectorAll('#setup-elements input[type="radio"]')[0].click()
-}
-
-function onChange() {
-
-    console.log("on change input")
-    console.log("property: ", this.parentElement.parentElement.id)
-    console.log("value: ", this.value)
+    document.querySelectorAll('#project-widgets li').forEach(li => {
+        if (!dontRemove.includes(li.id)) {
+            li.remove()
+        }
+    })
     
-    //function(method, index, propertyName, input) {
-    
-    Global.SelectedWidget.widget.onChange(this)
+    document.getElementById("source").value = JSON.stringify(Global.Source, null, 2)
 }
-
 
 function newTheme() {
+    
+    reset()
 
     Global.Source = {
         "name": "New",
         "version": 1,
         "author": "",
-        "bgColor": 0, 
+        "bgColor": 0,
         "delay": 250,
         "setup": [],
         "sprites": [],
@@ -115,36 +111,105 @@ function newTheme() {
     refresh(Global.Source)
 }
 
-document.addEventListener("DOMContentLoaded", function(event) { 
+function loadJSON(e) {
+
+    if (e.target.files.length > 0) {
+        const file = e.target.files[0]
+        const reader = new FileReader();
+
+        reader.onload = (f) => {
+            if (f.target.result) {
+                reset()                            
+                Global.Source = JSON.parse(f.target.result)
+                refresh(Global.Source)
+                document.querySelector('#project-properties input[type="radio"]').click()
+            }
+        };
+
+        reader.readAsText(file);
+    }
+
+}
+
+
+
+function downloadSource() {
+
+    if (!Global.Source) {
+        Display.showModal('Error', 'Source is empty')
+        return
+    }
+
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(Global.Source, null, 2));
+    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", Utils.slugify(Global.Source.name) + ".json");
+    dlAnchorElem.click();
+}
+
+
+function accordionHandler(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
     //<!-- Source JSON -->
     document.querySelector('#source-new').addEventListener('click', newTheme);
-    document.querySelector('#source-load').addEventListener('click', ()=>{loadJSON(document.getElementsByName('source')[0].value)});
+    document.querySelector('#source-load').addEventListener('change', loadJSON);
     document.querySelector('#source-update').addEventListener('click', refreshDisplay);
+    document.querySelector('#source-download').addEventListener('click', downloadSource);
+
     //<!-- Display -->
     document.querySelector('#roundedPixels').addEventListener('click', Display.setRoundedPixels);
     //<!-- Toolbox -->
     document.querySelector('#btn-datetime').addEventListener('click', Widgets.DateTimeWidget.create.bind(Widgets.DateTimeWidget));
+    document.querySelector('#btn-sprite').addEventListener('click', Widgets.SpriteWidget.create.bind(Widgets.SpriteWidget));
+    document.querySelector('#btn-line').addEventListener('click', Widgets.LineWidget.create.bind(Widgets.LineWidget));
+    document.querySelector('#btn-image').addEventListener('click', Widgets.ImageWidget.create.bind(Widgets.ImageWidget));
+    document.querySelector('#btn-text').addEventListener('click', Widgets.TextWidget.create.bind(Widgets.TextWidget));
+
+    //<!-- Accordion -->
+    document.querySelector('#btn-acc-project').addEventListener('click', () => accordionHandler('project-accordion'));
+    document.querySelector('#btn-acc-setup').addEventListener('click', () => accordionHandler('setup-accordion'));
+    document.querySelector('#btn-acc-loop').addEventListener('click', () => accordionHandler('loop-accordion'));
 
 
     const projProperties = document.querySelector('#radio-project')
-    projProperties.addEventListener('click', ()=>{setSelected({widget:Widgets.ProjectWidget, object:{index:0}, input:projProperties})});
-
+    projProperties.addEventListener('click', () => { setSelected({ widget: Widgets.ProjectWidget, object: { index: 0 }, input: projProperties }) });
 
     //<!-- Properties -->
     const allProperties = document.querySelectorAll("#properties tr")
     allProperties.forEach(p => {
         let input = document.querySelectorAll("#properties #" + p.id + " input")[0]
-        /**
-         * widget: one of DateTimeWidget, LineWidget, TextWidget, ImageWidget, SpriteWidget, etc...
-         * index: object index in the array of setup or loop
-         * p.id: one of the tr.id like 'x', 'y', 'image', 'content', 'font', 'fgColor', 'bgColor', etc
-         * method: 'setup' or 'loop'
-         */
-        input.addEventListener('change', onChange, false)
+        input.addEventListener('change', () => Global.SelectedWidget.widget.onChange(input), false)
     })
+
+    //<!-- Upload Button -->
+    document.getElementById("img-upload").addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0]
+            const reader = new FileReader();
+
+            reader.onload = (f) => {
+                if (f.target.result) {
+                    document.getElementById("image-b64").value = f.target.result.substring('data:image/png;base64,'.length);
+                    document.getElementById("image-b64").dispatchEvent(new Event('change'));
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }, false);
 });
 
 document.getElementById('app').addEventListener('refresh-display', refreshDisplay)
 document.getElementById('app').addEventListener('widget-selected', e => setSelected(e.detail))
+
+
 
 Display.createDisplay()

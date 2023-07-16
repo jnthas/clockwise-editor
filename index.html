@@ -10,7 +10,7 @@
     <link rel="shortcut icon" type="image/x-icon"
         href="https://github.com/jnthas/clockwise/raw/gh-pages/static/images/favicon.png">
 
-    <script src="lib/png.js"></script>
+    <script src="lib/png.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Clockwise Theme Editor</title>
 </head>
@@ -27,71 +27,76 @@
                 </header>
                 
                 <div class="w3-container w3-white w3-padding  w3-left-align">
-                    <button title="Rect" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-rect" title="Rect" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-square-o"></i>
                     </button>
-                    <button title="Fill Rect" class="w3-button w3-round w3-border toolbox-button" >
+                    <button id="btn-fillrect" title="Fill Rect" class="w3-button w3-round w3-border toolbox-button" >
                         <i class="w3-large fa fa-square"></i>
                     </button>
-                    <button title="Circle" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-cicle" title="Circle" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-circle-o"></i>
                     </button>
-                    <button title="Fill Circle" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-fillcircle" title="Fill Circle" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-circle"></i>
                     </button>
                     <button id="btn-datetime" title="Date/Time" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-calendar"></i>
                     </button>
-                    <button title="Line" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-line" title="Line" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-minus"></i>
                     </button>
-                    <button title="Image" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-image" title="Image" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-picture-o"></i>
                     </button>
-                    <button title="Text" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-text" title="Text" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-font"></i>
                     </button>    
-                    <button title="Sprite" class="w3-button w3-round w3-border toolbox-button">
+                    <button id="btn-sprite" title="Sprite" class="w3-button w3-round w3-border toolbox-button">
                         <i class="w3-large fa fa-film"></i>
                     </button>    
                 </div>
             </div>
 
 
-            <div class="w3-card-4 w3-margin">
+            <div id="project-widgets" class="w3-card-4 w3-margin">
                 <header class="w3-container w3-blue-gray">
                     <span id="elements-title" class="w3-large">Project []</span>
                 </header>
                 
                 <div class="w3-white" style="overflow-y:scroll;max-height:45vh;">
-                    <span><strong>Project</strong>
-                    <ul id="project-elements" class="w3-ul">
-                        <li id="project-properties" class="theme-element w3-bar w3-hover-light-grey"> 
-                            <input id="radio-project" class="w3-radio element-radio" type="radio" name="base1">
-                            <span><i class="w3-small fa fa-file-text-o"></i> Properties</span>
-                        </li>
-                    </ul>
-                    </span>
 
-                    <span><strong>Setup</strong>
-                    <ul id="setup-elements" class="w3-ul">
-                        <li id="base-widget-setup" class="theme-element w3-hover-light-grey w3-hide">
-                            <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
-                            <input class="w3-radio element-radio" type="radio" name="base1">
-                            <span></span>
-                        </li>
-                    </ul>
-                    </span>
+                    <button id="btn-acc-project" class="btn-accordions w3-button w3-light-gray w3-block w3-left-align">Project</button>
+                    <div id="project-accordion" class="w3-container w3-hide">
+                        <ul id="project-elements" class="w3-ul">
+                            <li id="project-properties" class="theme-element w3-bar w3-hover-light-grey"> 
+                                <input id="radio-project" class="w3-radio element-radio" type="radio" name="base1">
+                                <span><i class="w3-small fa fa-file-text-o"></i> Properties</span>
+                            </li>
+                        </ul>    
+                    </div>
 
-                    <span><strong>Loop</strong>
-                    <ul id="loop-elements" class="w3-ul">
-                        <li id="base-widget-loop" class="theme-element w3-hover-light-grey w3-hide">
-                            <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
-                            <input class="w3-radio element-radio" type="radio" name="base1">
-                            <span></span>
-                        </li>
-                    </ul>
-                    </span>
+
+                    <button id="btn-acc-setup" class="btn-accordions w3-button w3-light-gray w3-block w3-left-align">Setup</button>
+                    <div id="setup-accordion" class="w3-container w3-hide">
+                        <ul id="setup-elements" class="w3-ul">
+                            <li id="base-widget-setup" class="theme-element w3-hover-light-grey w3-hide">
+                                <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                                <input class="w3-radio element-radio" type="radio" name="base1">
+                                <span></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button id="btn-acc-loop" class="btn-accordions w3-button w3-light-gray w3-block w3-left-align">Loop</button>
+                    <div id="loop-accordion" class="w3-container w3-hide">
+                        <ul id="loop-elements" class="w3-ul">
+                            <li id="base-widget-loop" class="theme-element w3-hover-light-grey w3-hide">
+                                <span class="w3-bar-item w3-button w3-medium w3-right" style="padding: 0 4px 0 4px;">×</span>
+                                <input class="w3-radio element-radio" type="radio" name="base1">
+                                <span></span>
+                            </li>
+                        </ul>
+                    </div>
 
                 </div>
             </div>
@@ -162,7 +167,14 @@
                         </tr>
                         <tr id="image">
                             <td class="w3-right-align property-label">Image</td>
-                            <td class="property-field"><input class="w3-input w3-border w3-round" type="text"></td>
+                            <td class="property-field">
+                                <input id="image-b64" class="w3-input w3-border w3-round" type="text">
+                                
+                                <label for="img-upload" class="custom-file-upload">
+                                    <i class="w3-small fa fa-cloud-upload"></i>
+                                </label>
+                                <input id="img-upload" name="img-upload" type="file" accept="image/png" hidden>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -182,7 +194,7 @@
 
             <div class="w3-card-4 w3-margin">
                 <header class="w3-container w3-blue-gray">
-                    <span class="w3-large">Display [64x64]</span>
+                    <h4>Display [64x64]</h4>
                 </header>
 
                 <div class="w3-container w3-white" style="padding: 0;">
@@ -204,32 +216,46 @@
         <div class="w3-col s6 w3-center">
             <div class="w3-card-4 w3-margin">
                 <header class="w3-container w3-blue-gray">
-                    <span class="w3-large">Source</span>
+                    <h4>Source</h4>
                 </header>
                 
                 <div class="w3-container w3-white" style="padding: 0;">
                     <div class="w3-bar w3-light-gray" style="width: 100%;">
                         <a id="source-new" href="#" class="w3-bar-item w3-hover-blue">New</a>
-                        <a id="source-load" href="#" class="w3-bar-item w3-hover-blue">Load</a>
-                        <a id="source-update" href="#" class="w3-bar-item w3-hover-blue">Update</a>
+                        <!-- <a id="source-load" href="#" class="w3-bar-item w3-hover-blue">Load</a> -->
+                        <label for="source-load" class="source-menu w3-bar-item w3-hover-blue">Load</label><input id="source-load" name="source-load" type="file" accept="text/json" hidden>
                         <a id="source-download" href="#" class="w3-bar-item w3-hover-blue">Download</a>
-                        
-                        <!--
-                        <div class="w3-bar-item w3-left">
-                            <button title="Refresh Display" class="w3-button w3-tiny w3-round w3-border"><i class="w3-medium fa fa-retweet"></i></button>
-                        </div>
-                        -->
-                        
+                        <a id="source-update" href="#" class="w3-bar-item w3-hover-blue w3-right">Refresh</a>
+
+                        <a id="downloadAnchorElem" style="display:none"></a>    
                     </div>
                 </div>
                 
                 <div class="w3-container w3-white w3-padding-16">
-                    <textarea  class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source" id="source"></textarea>
+                    <textarea  disabled class="w3-input w3-border w3-round-large" style="font-family: 'Courier New', Courier, monospace;font-size: smaller;" rows="30" name="source" id="source"></textarea>
                 </div>
 
             </div>
 
         </div>
+
+
+        <div id="msgbox" class="w3-modal">
+            <div class="w3-modal-content">
+
+                <header class="w3-container w3-blue-gray">
+                  <span onclick="document.getElementById('msgbox').style.display='none'"
+                  class="w3-button w3-display-topright">&times;</span>
+                  <h4 id="modal-title"></h4>
+                </header>
+            
+                <div class="w3-container">
+                  <p id="modal-msg"></p>
+                </div>
+                        
+              </div>
+        </div>
+        
     </div>
 
     <script type="module" src="./modules/global.js"></script>
