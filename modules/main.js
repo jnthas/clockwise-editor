@@ -1,7 +1,7 @@
-import Global from "./modules/global.js"
-import Display from "./modules/display.js"
-import Utils from "./modules/utils.js"
-import Widgets from "./modules/widgets.js"
+import Global from "./global.js"
+import Display from "./display.js"
+import Utils from "./utils.js"
+import Widgets from "./widgets.js"
 
 const methods = ['setup', 'loop']
 
@@ -130,8 +130,6 @@ function loadJSON(e) {
     }
 
 }
-
-
 
 function downloadSource() {
 
