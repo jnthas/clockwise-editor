@@ -75,7 +75,7 @@ export function drawText(x, y, text, color, font) {
     for (let i = 0; i < text.length; i++) {
         //if (text.charAt(i).match(/^[A-Za-z]+$/)) {
         if (text.charAt(i) != ' ') {
-            drawRect(x, y - (font.anchor === 0 ? font.height : 0), font.width, font.height, color);
+            drawRect(x, y - (font.anchor === 0 ? Math.ceil(font.height/2) : 0), font.width, font.height, color);
         }
         x += font.width + font.space;
     }

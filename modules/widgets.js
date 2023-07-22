@@ -7,13 +7,13 @@ const FONTS = {
         width:7,
         height:11,
         space:1,
-        anchor:1
+        anchor:0
     },
     "picopixel": {
         width:3,
-        height:4,
+        height:5,
         space:1,
-        anchor:1
+        anchor:0
     },
     "": {
         width:5,
@@ -270,6 +270,10 @@ export const ImageWidget = {
     },
     render: function(obj) {
         Display.drawImage(obj.x, obj.y, obj.image)
+
+        
+
+        
     },
     getValue: function(id, propertyName) {
         const method = Global.SelectedWidget.method

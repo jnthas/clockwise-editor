@@ -70,7 +70,18 @@ function refreshDisplay(ev, source_ref) {
         source_ref[m].forEach(e => {
             Widgets.All.forEach(w => {
                 if (w.is(e.type)) {
-                    w.render(e)
+                    requestAnimationFrame(() => {
+                        // fires before next repaint
+            
+                        requestAnimationFrame(() => {
+                            // fires before the _next_ next repaint
+                            // ...which is effectively _after_ the next repaint
+            
+                            w.render(e)        
+                        });
+                    });
+
+                    
                 }
             })
         })
