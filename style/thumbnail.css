@@ -1,0 +1,25 @@
+
+html, body{
+    height: 100%;
+}
+
+.led-matrix {
+    --size: 4;
+    background-color: rgb(28, 28, 29);
+    width: 128px;
+    height: 128px;
+    display: grid;
+    grid-template-columns: repeat(var(--size), 1fr);
+    grid-template-rows: repeat(var(--size), 1fr);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pixel {
+    background-color: rgb(61, 61, 61);
+}
+
+
+body {
+    margin: 0;
+}

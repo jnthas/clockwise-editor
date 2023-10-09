@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="lib/png.min.js"></script>
+    <link rel="stylesheet" href="style/thumbnail.css">
+</head>
+<body>
+
+    <div id="display" style="width: 128px; height: auto;">
+        <div class="led-matrix"></div>
+    </div>
+
+    <script type="module" src="./modules/global.js"></script>
+    <script type="module" src="./modules/display.js"></script>
+    <script type="module" src="./modules/utils.js"></script>
+    <script type="module" src="./modules/widgets.js"></script>
+
+    <script type="module">
+        import Global from "./modules/global.js"
+        import Display from "./modules/display.js"
+        import Widgets from "./modules/widgets.js"
+        import Utils from "./modules/utils.js"
+        
+        const methods = ['setup', 'loop']
+
+        function refreshDisplay(source) {
+            Display.clearScreen(Utils.convert16To24Bits(source.bgColor))
+            Global.Source = source
+
+            methods.forEach(m => {
+                source[m].forEach(e => {
+                    Widgets.All.forEach(w => {
+                        if (w.is(e.type)) {
+                            requestAnimationFrame(() => {  //<-- necessary to render the elements in order
+                                requestAnimationFrame(() => {
+                                    w.render(e)
+                                });
+                            });                    
+                        }
+                    })
+                })
+            })
+        }
+
+        Display.createDisplay()
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const clockface = urlParams.get('cw');
+
+        //const cfs = ['donkey-kong', 'nyan-cat', 'pac-man', 'star-wars']
+
+        if (clockface) {
+
+            const url = `https://raw.githubusercontent.com/jnthas/clock-club/main/shared/${clockface}.json`
+                
+            fetch(url).then(response => 
+                response.json().then(data => {
+                    refreshDisplay(data)
+
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            htmlToImage.toPng(document.getElementById('display'))
+                                .then(function (dataUrl) {
+                                    console.log(dataUrl)
+                                });
+                        });
+                    });
+                }
+            ));
+        }
+    </script>
+</body>
+</html>
