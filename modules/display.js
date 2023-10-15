@@ -98,10 +98,12 @@ export function drawImage(x, y, image) {
     png.fromImageData(uint8Image)
         .then(pngData => {
 
+            /**
             if (pngData.colors === 1) {
                 showModal('Error', '1-bit PNG not supported yet')
                 return
             }
+            **/
 
             let img = pngData.decodePixels()
 
