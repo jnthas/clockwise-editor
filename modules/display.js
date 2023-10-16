@@ -98,33 +98,74 @@ export function drawImage(x, y, image) {
     png.fromImageData(uint8Image)
         .then(pngData => {
 
-            /**
-            if (pngData.colors === 1) {
-                showModal('Error', '1-bit PNG not supported yet')
-                return
-            }
-            **/
-
             let img = pngData.decodePixels()
 
-            for (let i = 0; i < img.length; i += Math.ceil(pngData.pixelBitlength / 8)) {
-                let color = ''
+            if (pngData.colorType === 6) {   //RGBA
 
-                // little endian
-                let r = img[i];
-                let g = img[i + 1];
-                let b = img[i + 2];
-                color = "#" +
-                    r.toString(16).padStart(2, '0') +
-                    g.toString(16).padStart(2, '0') +
-                    b.toString(16).padStart(2, '0');
+                console.log('RGBA')
 
-                drawPixel(x_temp++, y_temp, color);
-                if (x_temp >= pngData.width + x) {
-                    x_temp = x
-                    y_temp++
+                for (let i = 0; i < img.length; i += Math.ceil(pngData.pixelBitlength / 8)) {
+                    let color = ''
+    
+                    // little endian
+                    let r = img[i];
+                    let g = img[i + 1];
+                    let b = img[i + 2];
+                    color = "#" +
+                        r.toString(16).padStart(2, '0') +
+                        g.toString(16).padStart(2, '0') +
+                        b.toString(16).padStart(2, '0');
+    
+                    drawPixel(x_temp++, y_temp, color);
+                    if (x_temp >= pngData.width + x) {
+                        x_temp = x
+                        y_temp++
+                    }
                 }
+
+            }  else if (pngData.colorType === 3) {   // Palette
+
+                console.log('Color palette')
+
+                let decodedPalette = pngData.decodePalette()
+                let palette = []
+                for (let i = 0; i < decodedPalette.length; i += 3) {
+                    let color = ''
+    
+                    let r = decodedPalette[i];
+                    let g = decodedPalette[i + 1];
+                    let b = decodedPalette[i + 2];
+                    color = "#" +
+                        r.toString(16).padStart(2, '0') +
+                        g.toString(16).padStart(2, '0') +
+                        b.toString(16).padStart(2, '0');
+
+                    palette.push(color)
+
+                    console.log(`%c ${color} `, `background: ${color}; color: #fff'`);  
+                }
+
+                for (let i = 0; i < img.length; i++) {
+                    let imgByte = img[i];
+
+                    let pixels = []
+                    // Split a single byte in chucks, based on the bit length.
+                    for (let b=8; b>0; b=b-pngData.pixelBitlength) {
+                        pixels.push((imgByte >> (b-pngData.pixelBitlength)) & (Math.pow(2, pngData.pixelBitlength)-1));
+                    }
+
+                    pixels.forEach(p => drawPixel(x_temp++, y_temp, palette[p]))
+
+                    if (x_temp >= pngData.width + x) {
+                        x_temp = x
+                        y_temp++
+                    }
+                }
+            } else {
+                console.error(`PNG with colorType ${pngData.colorType} is not supported. Current supported types are 3 (indexed palette) or 6 (RGBA)`)
+                return
             }
+            
         });
 }
 
